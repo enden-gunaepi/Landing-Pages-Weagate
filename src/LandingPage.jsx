@@ -5,6 +5,8 @@ import CTASection from "./CTASection";
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openIndex, setOpenIndex] = useState(null); // 🔥 pindahin ke sini
+  
 
   const links = [
     { name: "Home", href: "#hero" },
@@ -14,6 +16,15 @@ export default function Navbar() {
     { name: "Testimonials", href: "#testimonials" },
     { name: "Contact", href: "#cta" },
   ];
+
+  const features = [
+    { icon: "👥", title: "Multi-Account", desc: "Kelola banyak akun WhatsApp sekaligus tanpa ribet, cocok untuk bisnis maupun pribadi." },
+    { icon: "🔒", title: "Keamanan Terjamin", desc: "Data terenkripsi end-to-end, privasi kamu tetap aman setiap saat." },
+    { icon: "💻", title: "Cross-Platform", desc: "Akses dari desktop, tablet, maupun smartphone. Bisa jalan di semua device." },
+    { icon: "⚡", title: "Performa Cepat", desc: "Ringan, responsif, dan hemat resource meski jalankan banyak akun sekaligus." },
+    { icon: "📊", title: "Analitik Real-time", desc: "Pantau statistik chat, engagement, dan performa akun langsung dari dashboard." },
+    { icon: "🤖", title: "Bot & Otomasi", desc: "Tambahkan bot & otomatisasi untuk balas pesan lebih cepat dan efisien." },
+  ]
 
   return (
     <div className={darkMode ? "dark" : ""}>
@@ -49,14 +60,41 @@ export default function Navbar() {
           >
             {darkMode ? "🌙" : "☀️"}
           </button>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="#cta"
-            className="hidden md:inline-block px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition"
-          >
-            Get Started
-          </motion.a>
+          {/* Dropdown Get Started */}
+<div className="relative hidden md:inline-block">
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={() => setOpenIndex(openIndex === "getStarted" ? null : "getStarted")}
+    className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition"
+  >
+    Get Started
+  </motion.button>
+
+  {openIndex === "getStarted" && (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className="absolute right-0 mt-2 w-40 rounded-xl shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black/5 overflow-hidden z-50"
+    >
+      <a
+        href="/login"
+        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+      >
+        Login
+      </a>
+      <a
+        href="/register"
+        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+      >
+        Register
+      </a>
+    </motion.div>
+  )}
+</div>
+
 
           {/* Hamburger Button */}
           <button
@@ -266,21 +304,15 @@ export default function Navbar() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-10 text-center">
-            {[
-              { icon: "👥", title: "Multi-Account", desc: "Kelola banyak akun WhatsApp sekaligus tanpa ribet, cocok untuk bisnis maupun pribadi." },
-              { icon: "🔒", title: "Keamanan Terjamin", desc: "Data terenkripsi end-to-end, privasi kamu tetap aman setiap saat." },
-              { icon: "💻", title: "Cross-Platform", desc: "Akses dari desktop, tablet, maupun smartphone. Bisa jalan di semua device." },
-              { icon: "⚡", title: "Performa Cepat", desc: "Ringan, responsif, dan hemat resource meski jalankan banyak akun sekaligus." },
-              { icon: "📊", title: "Analitik Real-time", desc: "Pantau statistik chat, engagement, dan performa akun langsung dari dashboard." },
-              { icon: "🤖", title: "Bot & Otomasi", desc: "Tambahkan bot & otomatisasi untuk balas pesan lebih cepat dan efisien." },
-            ].map((f, i) => (
+            {features.map((f, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.15 }}
                 viewport={{ once: true }}
-                className="group relative p-8 bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden"
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                className="p-8 bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
               >
                 {/* Icon */}
                 <div className="text-4xl mb-4">{f.icon}</div>
@@ -288,14 +320,22 @@ export default function Navbar() {
                 {/* Title */}
                 <h3 className="text-md font-semibold">{f.title}</h3>
 
-                {/* Hidden Description (fade-in saat hover) */}
-                <p className="absolute inset-0 flex items-center justify-center px-6 text-gray-700 dark:text-gray-300 text-sm opacity-0 translate-y-6 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 bg-gray-100/95 dark:bg-gray-900/95 rounded-2xl">
-                  {f.desc}
-                </p>
+                {/* Description muncul kalau openIndex === i */}
+                {openIndex === i && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mt-4 text-gray-700 dark:text-gray-300 text-sm"
+                  >
+                    {f.desc}
+                  </motion.p>
+                )}
               </motion.div>
             ))}
           </div>
         </section>
+
 
 
 

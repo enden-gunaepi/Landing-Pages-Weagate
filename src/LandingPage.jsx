@@ -5,10 +5,10 @@ import CTASection from "./CTASection";
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openIndex, setOpenIndex] = useState(null); // 🔥 pindahin ke sini
-  const [modalAction, setModalAction] = useState(null); // 'login' atau 'register'
+  const [showServerModal, setShowServerModal] = useState(false);
+  const [selectedServer, setSelectedServer] = useState(null);
 
-  
+   
 
   const links = [
     { name: "Home", href: "#hero" },
@@ -17,6 +17,12 @@ export default function Navbar() {
     { name: "Pricing", href: "#pricing" },
     { name: "Testimonials", href: "#testimonials" },
     { name: "Contact", href: "#cta" },
+  ];
+
+  const servers = [
+    "Solo", "Pati", "Kudus", "Jogja",
+    "Jakarta", "Tegal", "Bandung", "Surabaya",
+    "Texas", "Germany"
   ];
 
   const features = [
@@ -32,161 +38,127 @@ export default function Navbar() {
     <div className={darkMode ? "dark" : ""}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-500 font-inter">
         
-        {/* Navbar */}
         <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-white/40 dark:bg-gray-900/40 border-b border-white/20 dark:border-gray-700/40">
-          <div className="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
-            {/* Logo */}
-            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent tracking-tight">
-              Weagate
-            </h1>
+        <div className="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto">
+          {/* Logo */}
+          <h1 className="text-2xl font-extrabold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent tracking-tight">
+            Weagate
+          </h1>
 
-            {/* Desktop Menu */}
-            <nav className="hidden md:flex items-center gap-8 text-gray-700 dark:text-gray-200 font-medium">
-              {links.map((link, i) => (
-                <a
-                  key={i}
-                  href={link.href}
-                  className="relative group hover:text-blue-500 transition-colors"
-                >
-                  {link.name}
-                  <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                </a>
-              ))}
-            </nav>
-
-            {/* Actions + Mobile Menu Button */}
-            <div className="flex items-center gap-4">
-              {/* Dark mode toggle */}
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:scale-110 transition"
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex items-center gap-8 text-gray-700 dark:text-gray-200 font-medium">
+            {links.map((link, i) => (
+              <a
+                key={i}
+                href={link.href}
+                className="relative group hover:text-blue-500 transition-colors"
               >
-                {darkMode ? "🌙" : "☀️"}
-              </button>
+                {link.name}
+                <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            ))}
+          </nav>
 
-              {/* Dropdown Get Started (desktop) */}
-              <div className="relative hidden md:inline-block">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() =>
-                    setOpenIndex(openIndex === "getStarted" ? null : "getStarted")
-                  }
-                  className="px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition"
-                >
-                  Get Started
-                </motion.button>
-
-                {openIndex === "getStarted" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-40 rounded-xl shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black/5 overflow-hidden z-50"
-                  >
-                    <button
-                      onClick={() => setModalAction("login")}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={() => setModalAction("register")}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      Register
-                    </button>
-                  </motion.div>
-                )}
-              </div>
-
-              {/* Hamburger Button */}
-              <button
-                className="md:hidden p-2 rounded-lg bg-gray-200 dark:bg-gray-700"
-                onClick={() => setMobileOpen(!mobileOpen)}
-              >
-                {mobileOpen ? "✖" : "☰"}
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
-          {mobileOpen && (
-            <motion.nav
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="md:hidden backdrop-blur-xl bg-white/40 dark:bg-gray-900/40 border-b border-white/20 dark:border-gray-700/40 px-6 py-4 flex flex-col gap-4 text-gray-700 dark:text-gray-200 font-medium"
+          {/* Actions + Mobile Menu Button */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:scale-110 transition"
             >
-              {links.map((link, i) => (
-                <a
-                  key={i}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="hover:text-blue-500 transition"
+              {darkMode ? "🌙" : "☀️"}
+            </button>
+
+            {/* Get Started → Modal Pilih Server */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowServerModal(true)}
+              className="hidden md:inline-block px-5 py-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition"
+            >
+              Get Started
+            </motion.button>
+
+            {/* Hamburger */}
+            <button
+              className="md:hidden p-2 rounded-lg bg-gray-200 dark:bg-gray-700"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? "✖" : "☰"}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileOpen && (
+          <motion.nav
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden backdrop-blur-xl bg-white/40 dark:bg-gray-900/40 border-b border-white/20 dark:border-gray-700/40 px-6 py-4 flex flex-col gap-4 text-gray-700 dark:text-gray-200 font-medium"
+          >
+            {links.map((link, i) => (
+              <a
+                key={i}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="hover:text-blue-500 transition"
+              >
+                {link.name}
+              </a>
+            ))}
+
+            <button
+              onClick={() => {
+                setShowServerModal(true);
+                setMobileOpen(false);
+              }}
+              className="px-5 py-2 text-center rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition"
+            >
+              Get Started
+            </button>
+          </motion.nav>
+        )}
+      </header>
+
+      {/* Modal Pilih Server */}
+      {showServerModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl border border-white/50 dark:border-gray-700/30 p-8 rounded-3xl shadow-xl w-full max-w-md"
+          >
+            <h2 className="text-center text-xl font-bold text-gray-900 dark:text-white mb-6">
+              Please Select Server for Register
+            </h2>
+
+            <div className="grid grid-cols-2 gap-4">
+              {servers.map((server) => (
+                <button
+                  key={server}
+                  onClick={() => setSelectedServer(server)}
+                  className={`px-4 py-3 rounded-full font-semibold transition shadow-sm ${
+                    selectedServer === server
+                      ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md"
+                      : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                  }`}
                 >
-                  {link.name}
-                </a>
+                  {server}
+                </button>
               ))}
+            </div>
 
+            <div className="flex justify-center mt-6">
               <button
-                onClick={() => {
-                  setModalAction("login");
-                  setMobileOpen(false);
-                }}
-                className="px-5 py-2 text-center rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow-md hover:shadow-lg transition"
+                onClick={() => setShowServerModal(false)}
+                className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition"
               >
-                Login
-              </button>
-              <button
-                onClick={() => {
-                  setModalAction("register");
-                  setMobileOpen(false);
-                }}
-                className="px-5 py-2 text-center rounded-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold shadow-md hover:shadow-lg transition"
-              >
-                Register
-              </button>
-            </motion.nav>
-          )}
-        </header>
-        {/* Modal Pilih Server */}
-        {modalAction && (
-         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 backdrop-blur-sm">
-            <div className="bg-white/70 dark:bg-gray-800/80 backdrop-blur-2xl border border-white/50 dark:border-gray-700/30 p-8 rounded-3xl shadow-xl max-w-md w-full transition-all duration-300">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                Pilih Mode Server
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                Mau pakai server mandiri atau server publik untuk{" "}
-                {modalAction === "login" ? "login" : "register"}?
-              </p>
-
-              <div className="space-y-4">
-                <a
-                  href={`/${modalAction}?server=mandiri`}
-                  className="block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold shadow hover:opacity-90 transition"
-                >
-                  Server Mandiri
-                </a>
-                <a
-                  href={`/${modalAction}?server=publik`}
-                  className="block w-full text-center px-4 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold shadow hover:opacity-90 transition"
-                >
-                  Server Publik
-                </a>
-              </div>
-
-              <button
-                onClick={() => setModalAction(null)}
-                className="mt-6 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition"
-              >
-                Batal
+                Close
               </button>
             </div>
-          </div>
-        )}
+          </motion.div>
+        </div>
+      )}
 
         {/* Hero Section */}
         <section id="hero" className="relative overflow-hidden">
@@ -355,36 +327,34 @@ export default function Navbar() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-10 text-center">
-            {features.map((f, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
+          {features.map((f, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
+              viewport={{ once: true }}
+              className="p-8 bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300"
+            >
+              {/* Icon */}
+              <div className="text-4xl mb-4">{f.icon}</div>
+
+              {/* Title */}
+              <h3 className="text-md font-semibold">{f.title}</h3>
+
+              {/* Description langsung tampil */}
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                viewport={{ once: true }}
-                onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="p-8 bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="mt-4 text-gray-700 dark:text-gray-300 text-sm"
               >
-                {/* Icon */}
-                <div className="text-4xl mb-4">{f.icon}</div>
+                {f.desc}
+              </motion.p>
+            </motion.div>
+          ))}
+        </div>
 
-                {/* Title */}
-                <h3 className="text-md font-semibold">{f.title}</h3>
-
-                {/* Description muncul kalau openIndex === i */}
-                {openIndex === i && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mt-4 text-gray-700 dark:text-gray-300 text-sm"
-                  >
-                    {f.desc}
-                  </motion.p>
-                )}
-              </motion.div>
-            ))}
-          </div>
         </section>
 
 
